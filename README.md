@@ -14,4 +14,4 @@ This program is really unfinished, and more of a practice for me before making a
 
 ### Not Implemented:
 - Typing, renaming, and all text related stuff (That means that there is only the hardcoded and the "Implement typing!!" todo values)
-- Pages (May never implement it, if you want more than 7 values, feel free to fork this repository and change grid row count)
+- Pages (May never implement it, if you want more than 7 values, feel free to fork this repository and change value of ROWS_COUNT at the top of main.c file)

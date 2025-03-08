@@ -8,6 +8,8 @@
 #include <X11/keysym.h>
 #include <xcb/xcb_keysyms.h>
 
+#define ROWS_COUNT 7
+
 cgui_grid* update_todo_things();
 
 void input_callback(struct cgui_event* event);
@@ -24,7 +26,7 @@ int main(int argc, char** argv){
     cgui_init(argc, argv);
 
 	window = cgui_window_create();
-	grid = cgui_grid_create(2, 7);
+	grid = cgui_grid_create(2, ROWS_COUNT);
 	add_button = cgui_button_create();
 	cgui_button_set_label(add_button, "+");
 	cgui_button_on_click_no_arg(add_button, add_button_callback);
@@ -52,9 +54,9 @@ int main(int argc, char** argv){
 		things_size++;
 	}
 	
-	cgui_grid_assign_cell(grid, add_button, 0, 6, 2, 1);
+	cgui_grid_assign_cell(grid, add_button, 0, ROWS_COUNT - 1, 2, 1);
 
-	cgui_grid_resize_col(grid, 0, 50);
+	cgui_grid_resize_col(grid, 0, 40);
 	cgui_grid_set_col_flex(grid, 0, 2);
 	
     cgui_window_push_grid(window, grid);
@@ -75,18 +77,18 @@ int main(int argc, char** argv){
 }
 
 cgui_grid* update_todo_things(){
-	cgui_grid* new_grid = cgui_grid_create(2, 7);
+	cgui_grid* new_grid = cgui_grid_create(2, ROWS_COUNT);
 
 	for (int i = 0; i < things_size; i++){
 		cgui_grid_assign_cell(new_grid, things[i]->cell_title, 0, i, 1, 1);
 		cgui_grid_assign_cell(new_grid, things[i]->cell_button, 1, i, 1, 1);
 	}
 
-	if (things_size < 7){
-		cgui_grid_assign_cell(new_grid, add_button, 0, 6, 2, 1);
+	if (things_size < ROWS_COUNT){
+		cgui_grid_assign_cell(new_grid, add_button, 0, ROWS_COUNT - 1, 2, 1);
 	}
 	
-	cgui_grid_resize_col(new_grid, 0, 50);
+	cgui_grid_resize_col(new_grid, 0, 40);
 	cgui_grid_set_col_flex(new_grid, 0, 2);
 
 	cgui_window_swap_grid(window, grid, new_grid);

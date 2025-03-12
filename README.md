@@ -15,3 +15,4 @@ This program is unfinished, and more of a practice for me before making a real a
 
 ### Not Implemented:
 - Pages (May never implement it, if you want more than 7 values, feel free to fork this repository and change value of ROWS_COUNT at the top of main.c file)
+- Saving, if you quit the program, you will lose all of your todo things, will implement soon

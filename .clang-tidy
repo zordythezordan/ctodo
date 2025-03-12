@@ -1,0 +1,5 @@
+Checks: >
+  -*,  # Disable all checks
+  clang-analyzer-*,  # Enable clang analyzer checks
+  readability-*,  # Enable readability checks
+  -readability-misleading-indentation  # Disable this specific check

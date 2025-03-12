@@ -2,11 +2,14 @@
 #include <cassette/cgui-cell.h>
 #include <cassette/cgui-event.h>
 #include <cassette/cgui-grid.h>
+#include <cassette/cgui-label.h>
 #include <cassette/cgui-window.h>
 #include <cassette/cgui.h>
-#include "ui/todoline.h"
 #include <X11/keysym.h>
 #include <xcb/xcb_keysyms.h>
+
+#include "ui/todoline.h"
+#include "string_operations.h"
 
 #define ROWS_COUNT 7
 
@@ -15,12 +18,16 @@ cgui_grid* update_todo_things();
 void input_callback(struct cgui_event* event);
 void status_button_callback(cgui_cell* c);
 void add_button_callback(cgui_cell* c);
+bool label_hover_callback(cgui_cell* c, struct cgui_cell_event* event);
 
 cgui_window* window = CGUI_WINDOW_PLACEHOLDER;
 cgui_grid* grid = CGUI_GRID_PLACEHOLDER;
 cgui_cell* add_button = CGUI_CELL_PLACEHOLDER;
 
 bool is_shift_pressed = false;
+
+bool is_editing_instance = false;
+todo_thing* editing_instance;
 
 int main(int argc, char** argv){
     cgui_init(argc, argv);
@@ -49,10 +56,13 @@ int main(int argc, char** argv){
 
 		cgui_grid_assign_cell(grid, thing->cell_title, 0, i, 1, 1);
 		cgui_grid_assign_cell(grid, thing->cell_button, 1, i, 1, 1);
+		cgui_cell_on_event(thing->cell_title, label_hover_callback);
 			
 		things = todo_thing_array_append(things, things_size, thing);
 		things_size++;
 	}
+
+	// editing_instance = things[1];
 	
 	cgui_grid_assign_cell(grid, add_button, 0, ROWS_COUNT - 1, 2, 1);
 
@@ -104,10 +114,50 @@ void input_callback(struct cgui_event* event){
 		case CGUI_EVENT_KEY_PRESS:
             if (event->key_code == 50 || event->key_code == 62)
             	is_shift_pressed = true;
+            if (is_editing_instance == true){
+	            // typing
+				if (event->key_code > 9 && event->key_code < 62 && event->key_code != 36 && event->key_code != 22){
+            		xcb_key_symbols_t* keysyms = xcb_key_symbols_alloc(cgui_x11_connection());
+            		if (keysyms == NULL){
+            		    fprintf(stderr, "Couldn't allocate keysyms\n");
+            		    return;
+            		}
+
+            		xcb_keysym_t keysym = xcb_key_symbols_get_keysym(keysyms, event->key_code, 0);
+
+            		char character = 0;
+            		if (keysym >= XK_space && keysym <= XK_asciitilde){
+            		    character = is_shift_pressed == false ? (char)keysym : shift_character(keysym);
+
+            		    add_character_to_string(&editing_instance->name, character);
+            		    cgui_label_set(editing_instance->cell_title, editing_instance->name);
+            		}
+            	}
+            	else if (event->key_code == 65){
+            		add_character_to_string(&editing_instance->name, ' ');
+            		cgui_label_set(editing_instance->cell_title, editing_instance->name);
+            	}
+        		else if (event->key_code == 22){
+            		if (event->key_mods.ctrl == true){
+            			editing_instance->name = malloc(1);
+            			editing_instance->name[0] = '\0';
+            		}
+            		else {
+						erase_last_character_in_a_string(&editing_instance->name);
+            		}
+
+            		cgui_label_set(editing_instance->cell_title, editing_instance->name);
+            	}
+            	else if (event->key_code == 9){
+            		is_editing_instance = false;
+            		editing_instance = NULL;
+            	}
+            }
 			break;
 		case CGUI_EVENT_KEY_RELEASE:
             if (event->key_code == 50 || event->key_code == 62)
             	is_shift_pressed = false;
+            break;
 
 		default: break;
 	}
@@ -132,10 +182,37 @@ void status_button_callback(cgui_cell* c){
 
 void add_button_callback(cgui_cell* c){
 	char name[24];
-	sprintf(name, "Implement typing!! %lu", things_size + 1);
+	sprintf(name, "meow :3");
 
 	todo_thing* new_thing = todo_thing_init(name, status_button_callback);
+	cgui_cell_on_event(new_thing->cell_title, label_hover_callback);
 	things = todo_thing_array_append(things, things_size, new_thing);
 	things_size++;
 	grid = update_todo_things();
+}
+
+bool label_hover_callback(cgui_cell* c, struct cgui_cell_event* event){
+	todo_thing* thing = NULL;
+
+	for (int i = 0; i < things_size; i++){
+		if (c == things[i]->cell_title){
+			thing = things[i];
+			break;
+		}
+	}
+	
+	if (thing == NULL){
+		return false;
+	}
+	
+	switch(event->type){
+		case CGUI_CELL_EVENT_BUTTON_PRESS:
+			if (event->button_id == 1){
+				is_editing_instance = true;
+				editing_instance = thing;
+			}
+			break;
+
+		default: break;
+	}
 }

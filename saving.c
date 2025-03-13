@@ -1,11 +1,15 @@
 #include <stdio.h>
 #include <stdlib.h>
+
 #include <string.h>
+
 #include <unistd.h>
 #include <linux/limits.h>
 #include <sys/stat.h>
+
 #include "saving.h"
 #include "string_operations.h"
+#include "limits.h"
 
 char* get_pwd(){
     char* cwd = malloc(PATH_MAX * sizeof(char));
@@ -70,7 +74,6 @@ void write_todo_to_file(todo_thing** things, size_t things_size){
     fclose(file);
 }
 
-
 todo_thing** load_from_file(size_t* size){
     FILE* file = fopen(strconcat(getenv("HOME"), "/.local/share/ctodo/todo_data"), "r");
     if (file == NULL){
@@ -82,7 +85,7 @@ todo_thing** load_from_file(size_t* size){
     todo_thing** things = NULL;
     size_t things_size = 0;
 
-    while(fgets(buffer, sizeof(buffer), file) != NULL){
+    while(fgets(buffer, sizeof(buffer), file) != NULL && things_size < ROWS_COUNT){
         buffer[strcspn(buffer, "\n")] = '\0';
 
         char** split = strsplit(buffer, '\t');

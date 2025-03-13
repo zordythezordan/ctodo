@@ -11,8 +11,7 @@
 // #include "ui/todoline.h"
 #include "string_operations.h"
 #include "saving.h"
-
-#define ROWS_COUNT 7
+#include "limits.h"
 
 cgui_grid* update_todo_things();
 
@@ -51,7 +50,9 @@ int main(int argc, char** argv){
 		cgui_button_on_click_no_arg(things[i]->cell_button, status_button_callback);
 	}
 
-	cgui_grid_assign_cell(grid, add_button, 0, ROWS_COUNT - 1, 2, 1);
+	if (things_size != ROWS_COUNT){
+		cgui_grid_assign_cell(grid, add_button, 0, ROWS_COUNT - 1, 2, 1);
+	}
 
 	cgui_grid_resize_col(grid, 0, 45);
 	cgui_grid_resize_col(grid, 1, 5);

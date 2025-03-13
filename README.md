@@ -1,18 +1,21 @@
-# CTODO — Little *UNFINISHED* program made with cassete cgui
+# CTODO — Little program made with [cassete cgui](https://github.com/fraawlen/cassette/blob/trunk/docs/ui-model.md)
+<h1 align="center"><img src="images/ui.png" alt="ui preview"></h1>
 
-This program is unfinished, and more of a practice for me before making a real app using this library
+### What you can find *here*:
 
-### What you can find here:
-- Input handling that supports only latin characters
-- The way to swap grids (because there is no such an example project in original cassette repository </3)
-- And other nerdy C array, memory, pointers stuff
+ 1. Input handling that supports only latin characters
+ 2. The way to swap grids (because there is no such an example project in original cassette repository </3)
+ 3. And other nerdy C array, memory, pointers stuff
 
 ### Implemented:
-- Changing status (For now only 3 statuses: ND - "Not Done", INP - "In Progress", and D - "Done")
-- Deleting ToDo values (Shift + Click on status button)
-- Adding new ToDo values
-- Renaming (Click on title, Control + Backspace to erase whole text, no way to undo btw :3)
-- Saving and loading ToDo values
+- [x] Changing status
+- [x] Deleting ToDo values (Shift + Click on status button)
+- [x] Adding new ToDo values
+- [x] Renaming (Click on title, Control + Backspace to erase whole text, no way to undo btw :3)
+- [x] Saving and loading ToDo values
+- [ ] Pages (May never implement it, if you want more than 7 values, feel free to fork this repository and change value of ROWS_COUNT in the limits.h file)
 
-### Not Implemented:
-- Pages (May never implement it, if you want more than 7 values, feel free to fork this repository and change value of ROWS_COUNT at the top of main.c file)
+### Statuses
+1. ND - Not Done
+2. INP - In Progress
+3. D - Done

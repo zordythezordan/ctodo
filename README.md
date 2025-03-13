@@ -8,7 +8,7 @@ This program is unfinished, and more of a practice for me before making a real a
 - And other nerdy C array, memory, pointers stuff
 
 ### Implemented:
-- Changing status (For now only 2 statuses: ND - "Not Done" and D - "Done")
+- Changing status (For now only 3 statuses: ND - "Not Done", INP - "In Progress", and D - "Done")
 - Deleting ToDo values (Shift + Click on status button)
 - Adding new ToDo values
 - Renaming (Click on title, Control + Backspace to erase whole text, no way to undo btw :3)

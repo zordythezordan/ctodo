@@ -48,6 +48,55 @@ void erase_last_character_in_a_string(char** p_string){
     }
 }
 
+char** append_string(char** array, size_t array_size, char* string){
+    char** new_array = realloc(array, (array_size + 1) * sizeof(char*));
+    new_array[array_size] = strdup(string);
+    return new_array;
+}
+
+char** strsplit(char* str, char split_char) {
+    char* split_pos = strchr(str, split_char);
+    if (split_pos == NULL) {
+        return NULL;
+    }
+
+    char** result = malloc(2 * sizeof(char*));
+    if (result == NULL) {
+        return NULL;
+    }
+
+    size_t len1 = split_pos - str;
+
+    result[0] = malloc(len1 + 1);
+    if (result[0] == NULL) {
+        free(result);
+        return NULL;
+    }
+    strncpy(result[0], str, len1);
+    result[0][len1] = '\0';
+
+    size_t len2 = strlen(split_pos + 1);
+
+    result[1] = malloc(len2 + 1);
+    if (result[1] == NULL) {
+        free(result[0]); 
+        free(result);
+        return NULL;
+    }
+    strcpy(result[1], split_pos + 1);
+
+    return result;
+}
+
+char* strconcat(char* string1, char* string2){
+    char* new_string = malloc(strlen(string1) + strlen(string2));
+
+    strcpy(new_string, string1);
+    strcat(new_string, string2);
+
+    return new_string;
+}
+
 char shift_character(xcb_keysym_t keysym){
     char character = (char)keysym;
     

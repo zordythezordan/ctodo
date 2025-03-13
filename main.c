@@ -8,8 +8,9 @@
 #include <X11/keysym.h>
 #include <xcb/xcb_keysyms.h>
 
-#include "ui/todoline.h"
+// #include "ui/todoline.h"
 #include "string_operations.h"
+#include "saving.h"
 
 #define ROWS_COUNT 7
 
@@ -19,6 +20,7 @@ void input_callback(struct cgui_event* event);
 void status_button_callback(cgui_cell* c);
 void add_button_callback(cgui_cell* c);
 bool label_hover_callback(cgui_cell* c, struct cgui_cell_event* event);
+void window_on_exit();
 
 cgui_window* window = CGUI_WINDOW_PLACEHOLDER;
 cgui_grid* grid = CGUI_GRID_PLACEHOLDER;
@@ -39,34 +41,20 @@ int main(int argc, char** argv){
 	cgui_button_on_click_no_arg(add_button, add_button_callback);
 
     cgui_event_on_event(input_callback);
+    cgui_on_exit(window_on_exit);
 
-	char* to_init[] = {
-		"Finish TODO Program",
-		"Implement proper ui",
-		"Implement deleting things",
-	};
-	
-	size_t size = sizeof(to_init)/sizeof(to_init[0]);
-
-	for (int i = 0; i < size; i++){
-	    todo_thing* thing = todo_thing_init(to_init[i], status_button_callback);
-
-	    if (thing == NULL)
-	    	continue;
-
-		cgui_grid_assign_cell(grid, thing->cell_title, 0, i, 1, 1);
-		cgui_grid_assign_cell(grid, thing->cell_button, 1, i, 1, 1);
-		cgui_cell_on_event(thing->cell_title, label_hover_callback);
-			
-		things = todo_thing_array_append(things, things_size, thing);
-		things_size++;
+	things = load_from_file(&things_size);
+	for (int i = 0; i < things_size; i++){
+		cgui_grid_assign_cell(grid, things[i]->cell_title, 0, i, 1, 1);
+		cgui_grid_assign_cell(grid, things[i]->cell_button, 1, i, 1, 1);
+		cgui_cell_on_event(things[i]->cell_title, label_hover_callback);
+		cgui_button_on_click_no_arg(things[i]->cell_button, status_button_callback);
 	}
 
-	// editing_instance = things[1];
-	
 	cgui_grid_assign_cell(grid, add_button, 0, ROWS_COUNT - 1, 2, 1);
 
-	cgui_grid_resize_col(grid, 0, 40);
+	cgui_grid_resize_col(grid, 0, 45);
+	cgui_grid_resize_col(grid, 1, 5);
 	cgui_grid_set_col_flex(grid, 0, 2);
 	
     cgui_window_push_grid(window, grid);
@@ -98,12 +86,12 @@ cgui_grid* update_todo_things(){
 		cgui_grid_assign_cell(new_grid, add_button, 0, ROWS_COUNT - 1, 2, 1);
 	}
 	
-	cgui_grid_resize_col(new_grid, 0, 40);
+	cgui_grid_resize_col(new_grid, 0, 45);
+	cgui_grid_resize_col(new_grid, 1, 5);
 	cgui_grid_set_col_flex(new_grid, 0, 2);
 
 	cgui_window_swap_grid(window, grid, new_grid);
-	cgui_window_activate(window);
-	
+
 	return new_grid;
 }
 
@@ -127,7 +115,7 @@ void input_callback(struct cgui_event* event){
 
             		char character = 0;
             		if (keysym >= XK_space && keysym <= XK_asciitilde){
-            		    character = is_shift_pressed == false ? (char)keysym : shift_character(keysym);
+            		    character = event->key_mods.shift == false && event->key_mods.capslock == false ? (char)keysym : shift_character(keysym);
 
             		    add_character_to_string(&editing_instance->name, character);
             		    cgui_label_set(editing_instance->cell_title, editing_instance->name);
@@ -148,7 +136,7 @@ void input_callback(struct cgui_event* event){
 
             		cgui_label_set(editing_instance->cell_title, editing_instance->name);
             	}
-            	else if (event->key_code == 9){
+            	else if (event->key_code == 9 || event->key_code == 36){
             		is_editing_instance = false;
             		editing_instance = NULL;
             	}
@@ -181,10 +169,8 @@ void status_button_callback(cgui_cell* c){
 }
 
 void add_button_callback(cgui_cell* c){
-	char name[24];
-	sprintf(name, "meow :3");
-
-	todo_thing* new_thing = todo_thing_init(name, status_button_callback);
+	todo_thing* new_thing = todo_thing_init("");
+	cgui_button_on_click_no_arg(new_thing->cell_button, status_button_callback);
 	cgui_cell_on_event(new_thing->cell_title, label_hover_callback);
 	things = todo_thing_array_append(things, things_size, new_thing);
 	things_size++;
@@ -215,4 +201,10 @@ bool label_hover_callback(cgui_cell* c, struct cgui_cell_event* event){
 
 		default: break;
 	}
+
+	return true;
+}
+
+void window_on_exit(){
+	write_todo_to_file(things, things_size);
 }

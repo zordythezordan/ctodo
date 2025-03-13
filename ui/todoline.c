@@ -7,9 +7,10 @@
 
 const char* TODO_THING_STATUS_NAMES[] = {
     "ND",
+    "INP",
     "D"
 };
-const size_t TODO_THING_STATUS_NAMES_LENGTH = 2;
+const size_t TODO_THING_STATUS_NAMES_LENGTH = 3;
 
 todo_thing** todo_thing_array_append(todo_thing** array_instance, size_t array_size, todo_thing* appending_instance){
     array_instance = realloc(array_instance, (array_size + 1) * sizeof(todo_thing));
@@ -45,8 +46,8 @@ todo_thing** todo_thing_array_pull(todo_thing** array_instance, size_t array_siz
     return new_array;
 }
 
-todo_thing* todo_thing_init(char* name, void (*callback)(cgui_cell*)){
-    if (name == NULL || callback == NULL){
+todo_thing* todo_thing_init(char* name){
+    if (name == NULL){
         return NULL;
     }
     
@@ -82,7 +83,6 @@ todo_thing* todo_thing_init(char* name, void (*callback)(cgui_cell*)){
     }
     
     cgui_button_set_label(thing->cell_button, TODO_THING_STATUS_NAMES[thing->status]);
-    cgui_button_on_click_no_arg(thing->cell_button, callback);
     
     return thing;
 }
@@ -95,4 +95,3 @@ void todo_thing_status_up(todo_thing* instance){ // idk if ill ever need status-
 
     cgui_button_set_label(instance->cell_button, TODO_THING_STATUS_NAMES[instance->status]);
 }
-    

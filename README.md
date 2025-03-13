@@ -1,5 +1,5 @@
 # CTODO — Little program made with [cassete cgui](https://github.com/fraawlen/cassette/blob/trunk/docs/ui-model.md)
-<h1 align="center"><img src="images/ui.png" alt="ui preview"></h1>
+![UI Preview](images/ui.png)
 
 ### What you can find *here*:
 
@@ -19,3 +19,8 @@
 1. ND - Not Done
 2. INP - In Progress
 3. D - Done
+
+### How to build?
+1. Make sure to install [cassette](https://github.com/fraawlen/cassette?tab=readme-ov-file#build) and have libxcb installed.
+2. Run `bash b` in the project folder
+*this "b" file is just a gcc command that will find all the .c files in project directory, compile them and link cgui and xcb-keysyms*

@@ -22,5 +22,6 @@
 
 ### How to build?
 1. Make sure to install [cassette](https://github.com/fraawlen/cassette?tab=readme-ov-file#build) and have libxcb installed.
-2. Run `bash b` in the project folder
-*this "b" file is just a gcc command that will find all the .c files in project directory, compile them and link cgui and xcb-keysyms*
+2. Run `make` in the project folder
+3. Run `./ctodo`
+4. To clean directory, run `make clean`

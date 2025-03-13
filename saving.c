@@ -38,7 +38,7 @@ todo_thing* string_to_todo(char** split_result){
     todo_thing* thing = todo_thing_init(split_result[0]);
 
     int status_index = 0;
-    for (int i = 0; i < TODO_THING_STATUS_NAMES_LENGTH; i++){
+    for (int i = 0; i < (int)TODO_THING_STATUS_NAMES_LENGTH; i++){
         if (strcmp(TODO_THING_STATUS_NAMES[i], split_result[1]) == 0){
             status_index = i;
             break;
@@ -66,7 +66,7 @@ void write_todo_to_file(todo_thing** things, size_t things_size){
     char* file_path = strconcat(full_path, "todo_data");
     FILE* file = fopen(file_path, "w");
 
-    for (int i = 0; i < things_size; i++){
+    for (int i = 0; i < (int)things_size; i++){
         char* to_string = todo_to_string(things[i]);
         fputs(to_string, file);
     }

@@ -17,7 +17,7 @@ cgui_grid* update_todo_things();
 
 void input_callback(struct cgui_event* event);
 void status_button_callback(cgui_cell* c);
-void add_button_callback(cgui_cell* c);
+void add_button_callback(cgui_cell*);
 bool label_hover_callback(cgui_cell* c, struct cgui_cell_event* event);
 void window_on_exit();
 
@@ -43,7 +43,7 @@ int main(int argc, char** argv){
     cgui_on_exit(window_on_exit);
 
 	things = load_from_file(&things_size);
-	for (int i = 0; i < things_size; i++){
+	for (int i = 0; i < (int)things_size; i++){
 		cgui_grid_assign_cell(grid, things[i]->cell_title, 0, i, 1, 1);
 		cgui_grid_assign_cell(grid, things[i]->cell_button, 1, i, 1, 1);
 		cgui_cell_on_event(things[i]->cell_title, label_hover_callback);
@@ -78,7 +78,7 @@ int main(int argc, char** argv){
 cgui_grid* update_todo_things(){
 	cgui_grid* new_grid = cgui_grid_create(2, ROWS_COUNT);
 
-	for (int i = 0; i < things_size; i++){
+	for (int i = 0; i < (int)things_size; i++){
 		cgui_grid_assign_cell(new_grid, things[i]->cell_title, 0, i, 1, 1);
 		cgui_grid_assign_cell(new_grid, things[i]->cell_button, 1, i, 1, 1);
 	}
@@ -151,10 +151,9 @@ void input_callback(struct cgui_event* event){
 		default: break;
 	}
 }
-#pragma clang diagnostic pop
 
 void status_button_callback(cgui_cell* c){
-	for (int i = 0; i < things_size; i++){
+	for (int i = 0; i < (int)things_size; i++){
 		todo_thing* data = things[i];
 		if (c == data->cell_button) {
 			if (is_shift_pressed == true){
@@ -169,7 +168,7 @@ void status_button_callback(cgui_cell* c){
 	}
 }
 
-void add_button_callback(cgui_cell* c){
+void add_button_callback(cgui_cell*){
 	todo_thing* new_thing = todo_thing_init("");
 	cgui_button_on_click_no_arg(new_thing->cell_button, status_button_callback);
 	cgui_cell_on_event(new_thing->cell_title, label_hover_callback);
@@ -177,11 +176,12 @@ void add_button_callback(cgui_cell* c){
 	things_size++;
 	grid = update_todo_things();
 }
+#pragma clang diagnostic pop
 
 bool label_hover_callback(cgui_cell* c, struct cgui_cell_event* event){
 	todo_thing* thing = NULL;
 
-	for (int i = 0; i < things_size; i++){
+	for (int i = 0; i < (int)things_size; i++){
 		if (c == things[i]->cell_title){
 			thing = things[i];
 			break;

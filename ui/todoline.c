@@ -21,7 +21,7 @@ todo_thing** todo_thing_array_append(todo_thing** array_instance, size_t array_s
 
 todo_thing** todo_thing_array_pull(todo_thing** array_instance, size_t array_size, todo_thing* pulling_instance){
     int index = -1;
-    for (int i = 0; i < array_size; i++){
+    for (int i = 0; i < (int)array_size; i++){
         if (array_instance[i] == pulling_instance){
             index = i;
             break;
@@ -33,7 +33,7 @@ todo_thing** todo_thing_array_pull(todo_thing** array_instance, size_t array_siz
 
     todo_thing** new_array = malloc((array_size - 1) * sizeof(todo_thing*));
     int offset = 0;
-    for (int i = 0; i < array_size; i++){
+    for (int i = 0; i < (int)array_size; i++){
         if (i == index){
             offset = 1;
             continue;

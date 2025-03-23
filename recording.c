@@ -26,6 +26,25 @@ char* strconcat(const char* string1, const char* string2){
     return new_string;
 }
 
+char* get_default_output(){
+    FILE* command = popen("pactl info | grep \"Default Sink\" | cut -d ' ' -f 3", "r");
+
+    char buffer[64];
+    char* output_name = NULL;
+
+    while(fgets(buffer, sizeof(buffer), command)){
+        output_name = strdup(buffer);
+        break;
+    }
+
+    pclose(command);
+
+    int new_line = strchr(output_name, '\n') - output_name;
+    output_name[new_line] = '\0';
+
+    return strconcat(output_name, ".monitor");
+}
+
 int start_recording(char*** segments_array, size_t segments_array_size) {
     pid_t* pid = malloc(sizeof(pid_t));
     
@@ -47,7 +66,7 @@ int start_recording(char*** segments_array, size_t segments_array_size) {
         free(pid);
         return -1;
     } else if (*pid == 0) {
-        execlp("wf-recorder", "-r", "90", "-c", "libx264", "-f", file_name, "-abluez_output.C8_68_DE_EE_F6_D8.1.monitor", "-y", NULL);
+        execlp("wf-recorder", "-r", "90", "-c", "libx264", "-f", file_name, strconcat("-a", get_default_output()), "-y", NULL);
     }
 
     return *pid;

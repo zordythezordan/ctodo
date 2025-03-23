@@ -12,6 +12,7 @@
 char* strconcat(const char* string1, const char* string2);
 
 char* get_today();
+char* get_default_output();
 
 int start_recording(char*** segments_array, size_t segments_array_size);
 void stop_recording(int pid);

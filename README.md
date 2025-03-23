@@ -6,7 +6,8 @@ What program this have:
 - Getting default output!!!!!!
 - Cool ass gui design
 - a **PAUSE** button
-- obs is ASS comparing to this monster ![tiktok_proud](images/tiktok_proud.jpg)
+- obs is ASS comparing to this monster
+![tiktok_proud](images/tiktok_proud.jpg)
 
 ## How to build
 

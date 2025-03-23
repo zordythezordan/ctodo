@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=ctodo
+Comment=todo app
+Exec=ctodo
+Terminal=false
+Type=Application
+Keywords=text;editing;todo;organisation
+Categories=Utility;

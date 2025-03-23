@@ -6,13 +6,13 @@ SRCS = $(shell find . -name "*.c")
 OBJS = $(SRCS:.c=.o)
 
 # Executable name
-TARGET = crecord
+TARGET = ctodo
 
 # Libraries to link
-LIBS = -lcgui
+LIBS = -lcgui -lxcb-keysyms
 
 # Compiler flags
-# CFLAGS = -Wall -Wextra -O2
+CFLAGS = -Wall -Wextra -O2
 
 # Default target
 all: $(TARGET)
@@ -23,11 +23,10 @@ $(TARGET): $(OBJS)
 
 # Compile each .c file into an object file
 %.o: %.c
-	$(CC) -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@
 
 # Clean up build files
 clean:
 	rm -f $(OBJS) $(TARGET)
 
 .PHONY: all clean
-

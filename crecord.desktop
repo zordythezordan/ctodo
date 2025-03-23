@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=crecord
+Comment=screen recording app
+Exec=crecord
+Terminal=false
+Type=Application
+Keywords=recording;screen;wayland
+Categories=Utility;Recorder;AudioVideo
+Version=1.0

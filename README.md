@@ -6,7 +6,7 @@ What program this have:
 - Getting default output!!!!!!
 - Cool ass gui design
 - a **PAUSE** button
-- obs is ASS comparing to this monster <img src="/zordythezordan/crecord/raw/main/images/tiktok_proud.jpg" width=10% height=10%>
+- obs is ASS comparing to this monster ![tiktok proud emoji](images/tiktok_proud.png)
 
 ## How to build
 
